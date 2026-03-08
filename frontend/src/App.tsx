@@ -37,8 +37,8 @@ function App() {
     try {
       setErrorMsg(null); // Limpiamos errores previos
       const [sismosRes, statsRes] = await Promise.all([
-        axios.get<Sismo[]>(`http://localhost:3000/api/sismos?minMag=${magnitudMinima}`),
-        axios.get<Stats>('http://localhost:3000/api/stats')
+        axios.get<Sismo[]>(`https://sismos-backend.onrender.com/api/sismos?minMag=${magnitudMinima}`),
+        axios.get<Stats>('https://sismos-backend.onrender.com/api/stats')
       ]);
       setSismos(sismosRes.data);
       setStats(statsRes.data);
@@ -60,7 +60,7 @@ function App() {
     setIsSyncing(true);
     setErrorMsg(null);
     try {
-      await axios.get('http://localhost:3000/api/sync');
+      await axios.get('https://sismos-backend.onrender.com/api/sync');
       await fetchData(filtroMag);
     } catch (err) {
       console.error("Error al sincronizar:", err);

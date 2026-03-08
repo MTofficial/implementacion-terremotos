@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # 1. Base de Datos
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user_sismos
+      POSTGRES_PASSWORD: password_safe
+      POSTGRES_DB: temblores_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sismos_network
+
+  # 2. Servidor Backend
+  backend:
+    build: 
+      context: ./backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # IMPORTANTE: Cambiamos 'localhost' por 'db' para que los contenedores se comuniquen entre sí
+      DATABASE_URL: "postgresql://user_sismos:password_safe@db:5432/temblores_db?schema=public"
+    depends_on:
+      - db
+    networks:
+      - sismos_network
+
+  # 3. Interfaz Frontend
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "5173:80" # Mapeamos el puerto 80 de Nginx al 5173 en tu computadora
+    depends_on:
+      - backend
+    networks:
+      - sismos_network
+
+volumes:
+  postgres_data:
+
+networks:
+  sismos_network:
+    driver: bridge

@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: API Sismología Chile
+  description: API para sincronizar y consultar datos sísmicos recientes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor Local de Desarrollo
+paths:
+  /sync:
+    get:
+      summary: Sincroniza datos con la API externa (Boostr)
+      description: Consume la API externa, guarda los registros nuevos, evita duplicados y purga registros anteriores a 48 horas.
+      responses:
+        '200':
+          description: Sincronización exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sincronización exitosa
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      totalProcesados:
+                        type: integer
+                        example: 15
+                      registrosBorrados:
+                        type: integer
+                        example: 0
+        '500':
+          description: Error del servidor
+  /sismos:
+    get:
+      summary: Lista los sismos almacenados
+      description: Devuelve la lista de sismos ordenados por fecha descendente. Permite filtrar por magnitud mínima.
+      parameters:
+        - in: query
+          name: minMag
+          schema:
+            type: number
+          required: false
+          description: Magnitud mínima para filtrar (ej. 4.0)
+      responses:
+        '200':
+          description: Lista de sismos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    location:
+                      type: string
+                    magnitude:
+                      type: number
+                    date:
+                      type: string
+                      format: date-time
+  /stats:
+    get:
+      summary: Obtiene estadísticas agregadas
+      description: Calcula el total, promedio y magnitud máxima de los sismos en la base de datos.
+      responses:
+        '200':
+          description: Objeto con estadísticas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalSismos:
+                    type: integer
+                    example: 15
+                  promedioMagnitud:
+                    type: number
+                    example: 3.5
+                  magnitudMaxima:
+                    type: number
+                    example: 5.2
+                  sismoMasFuerte:
+                    type: string
+                    example: 31 km al sur de Pichidangui

@@ -32,28 +32,33 @@ Para este proyecto se optó por una arquitectura basada en microservicios ligero
 ### Paso 1: Levantar la Base de Datos
 Abre una terminal en la raíz del proyecto y ejecuta:
 ```bash
-docker-compose up -d ```
+docker-compose up -d 
+```
 
-Paso 2: Configurar el Backend
+### Paso 2: Configurar el Backend
 Abre una terminal en la carpeta backend e instala las dependencias, aplica las migraciones y levanta el servidor:
 
 Bash
-
+```bash
 cd backend
 npm install
 npx prisma migrate dev
 npm run dev
+```
+
 Nota: El backend incluye un Cron Job que sincroniza datos automáticamente cada 15 minutos y purga registros con más de 48 horas de antigüedad.
 
-Paso 3: Configurar el Frontend
+### Paso 3: Configurar el Frontend
 Abre una nueva terminal en la carpeta frontend, instala las dependencias y levanta la interfaz:
 
 Bash
-
+```bash
 cd frontend
 npm install
 npm run dev
+```
 🌐 El dashboard estará disponible en: http://localhost:5173
+
 
 👥 Colaboradores del Repositorio
 Este repositorio ha sido configurado para evaluación por parte del equipo técnico:

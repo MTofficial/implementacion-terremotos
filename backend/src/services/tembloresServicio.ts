@@ -36,6 +36,7 @@ export const syncEarthquakes = async () => {
       nuevos++;
     }
 
+    /*
     // filtro para mantener solo 2 dias
     const limiteDias = new Date();
     limiteDias.setDate(limiteDias.getDate() - 2);
@@ -47,10 +48,10 @@ export const syncEarthquakes = async () => {
         }
       }
     });
-    
-    console.log(`Limpieza: ${eliminados.count} registros antiguos eliminados.`);
+    */
+    // console.log(`Limpieza: ${eliminados.count} registros antiguos eliminados.`);
 
-    return { success: true, totalProcesados: nuevos, registrosBorrados: eliminados.count };
+    return { success: true, totalProcesados: nuevos, registrosBorrados: 0 };
   } catch (error) {
     console.error('Error en la sincronización:', error);
     throw error;

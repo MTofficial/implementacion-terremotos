@@ -31,19 +31,19 @@ function App() {
 
   //Estado para el filtro de magnitud
   const [filtroMag, setFiltroMag] = useState<number>(0);
-  const [filtroDias, setFiltroDias] = useState<number>(1);
+  const [filtroDias, setFiltroDias] = useState<number>(0);
 
   // 3. Función centralizada
   const fetchData = async (magnitudMinima: number, dias: number) => {
-    // <-- Modificado
     try {
       setErrorMsg(null);
       const [sismosRes, statsRes] = await Promise.all([
-        // Inyectamos el parámetro &dias en la URL
+        // CORRECCIÓN: Apuntamos a localhost y agregamos el parámetro &dias
         axios.get<Sismo[]>(
-          `https://localhost:3000/api/sismos?minMag=${magnitudMinima}&dias=${dias}`,
+          `http://sismos-backend.onrender.com/api/sismos?minMag=${magnitudMinima}&dias=${dias}`,
         ),
-        axios.get<Stats>("https://http://localhost:3000/api/stats"),
+        // CORRECCIÓN: Apuntamos a localhost
+        axios.get<Stats>("http://sismos-backend.onrender.com/api/stats"),
       ]);
       setSismos(sismosRes.data);
       setStats(statsRes.data);
@@ -65,7 +65,9 @@ function App() {
     setIsSyncing(true);
     setErrorMsg(null);
     try {
-      await axios.get("https://http://localhost:3000/api/sync");
+      // CORRECCIÓN: Apuntamos a localhost
+      await axios.get("http://sismos-backend.onrender.com/api/sync");
+      // CORRECCIÓN: Pasamos el filtroDias como segundo argumento
       await fetchData(filtroMag, filtroDias);
     } catch (err) {
       console.error("Error al sincronizar:", err);

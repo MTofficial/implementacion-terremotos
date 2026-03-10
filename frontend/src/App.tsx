@@ -40,10 +40,10 @@ function App() {
       const [sismosRes, statsRes] = await Promise.all([
         // CORRECCIÓN: Apuntamos a localhost y agregamos el parámetro &dias
         axios.get<Sismo[]>(
-          `http://sismos-backend.onrender.com/api/sismos?minMag=${magnitudMinima}&dias=${dias}`,
+          `https://sismos-backend.onrender.com/api/sismos?minMag=${magnitudMinima}&dias=${dias}`,
         ),
         // CORRECCIÓN: Apuntamos a localhost
-        axios.get<Stats>("http://sismos-backend.onrender.com/api/stats"),
+        axios.get<Stats>("https://sismos-backend.onrender.com/api/stats"),
       ]);
       setSismos(sismosRes.data);
       setStats(statsRes.data);
@@ -66,7 +66,7 @@ function App() {
     setErrorMsg(null);
     try {
       // CORRECCIÓN: Apuntamos a localhost
-      await axios.get("http://sismos-backend.onrender.com/api/sync");
+      await axios.get("https://sismos-backend.onrender.com/api/sync");
       // CORRECCIÓN: Pasamos el filtroDias como segundo argumento
       await fetchData(filtroMag, filtroDias);
     } catch (err) {

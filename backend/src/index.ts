@@ -57,13 +57,31 @@ app.get("/api/sismos", async (req, res) => {
 // Endpoint 3: Estadísticas Básicas
 app.get("/api/stats", async (req, res) => {
   try {
+    const { minMag, dias } = req.query;
+    const magnitudMinima = minMag ? parseFloat(minMag as string) : 0;
+    
+    // 1. Construimos el mismo filtro que usa la tabla
+    const whereClause: any = {
+      magnitude: { gte: magnitudMinima },
+    };
+
+    if (dias && parseInt(dias as string) > 0) {
+      const limiteFecha = new Date();
+      limiteFecha.setDate(limiteFecha.getDate() - parseInt(dias as string));
+      whereClause.date = { gte: limiteFecha };
+    }
+
+    // 2. Aplicamos el filtro a las estadísticas agregadas
     const stats = await prisma.earthquake.aggregate({
+      where: whereClause,
       _avg: { magnitude: true },
       _max: { magnitude: true },
       _count: { id: true },
     });
 
+    // 3. Aplicamos el filtro para buscar el sismo más fuerte
     const sismoMasFuerte = await prisma.earthquake.findFirst({
+      where: whereClause,
       orderBy: { magnitude: "desc" },
     });
 
@@ -79,7 +97,7 @@ app.get("/api/stats", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Error al calcular estadísticas" });
   }
-});
+}); 
 
 // --- NUEVO: Automatización (Cron Job) ---
 // La expresión '*/15 * * * *' significa "Ejecutar cada 15 minutos"

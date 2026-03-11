@@ -44,8 +44,6 @@ function App() {
         axios.get<Stats>(
           `https://sismos-backend.onrender.com/api/stats?minMag=${magnitudMinima}&dias=${dias}`,
         ),
-
-        axios.get<Stats>("https://sismos-backend.onrender.com/api/stats"),
       ]);
       setSismos(sismosRes.data);
       setStats(statsRes.data);
